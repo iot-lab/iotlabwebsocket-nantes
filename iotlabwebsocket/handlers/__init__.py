@@ -21,10 +21,10 @@ def test_proxy():
         request = tornado.httpclient.HTTPRequest("https://www.iot-lab.info")
         client = tornado.httpclient.AsyncHTTPClient()
         response = yield client.fetch(request)
-        LOGGER.info(f"Connection successful! Response code: {response.code}")
+        LOGGER.info("Connection successful! Response code: {}".format(response.code))
         return True
     except Exception as e:
-        LOGGER.error(f"Connection failed: {str(e)}")
+        LOGGER.error("Connection failed: {}".format(str(e)))
         return False
 
 def main():
