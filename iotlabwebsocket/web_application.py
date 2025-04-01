@@ -71,7 +71,7 @@ class WebApplication(tornado.web.Application):
                 proxy_port = int(proxy_parts[1]) if len(proxy_parts) > 1 else 3128
                 
             if proxy_host:
-                LOGGER.info(f"Configuring global HTTP client to use proxy: {proxy_host}:{proxy_port}")
+                LOGGER.info("Configuring global HTTP client to use proxy: {}:{}".format(proxy_host, proxy_port))
                 defaults = {
                     'proxy_host': proxy_host,
                     'proxy_port': proxy_port
@@ -93,16 +93,16 @@ class WebApplication(tornado.web.Application):
             websocket.close(
                 code=1000,
                 reason=(
-                    f"Cannot open more than {MAX_WEBSOCKETS_PER_NODE} "
-                    f"connections to node {node}."
+                    "Cannot open more than {} "
+                    "connections to node {}.".format(MAX_WEBSOCKETS_PER_NODE, node)
                 ),
             )
         elif self.user_connections[user] == MAX_WEBSOCKETS_PER_USER:
             websocket.close(
                 code=1000,
                 reason=(
-                    f"Max number of connections ({MAX_WEBSOCKETS_PER_USER}) "
-                    f"reached for user {user} on site {site}."
+                    "Max number of connections ({}) "
+                    "reached for user {} on site {}.".format(MAX_WEBSOCKETS_PER_USER, user, site)
                 ),
             )
         else:
@@ -117,8 +117,8 @@ class WebApplication(tornado.web.Application):
         else:
             LOGGER.debug("No TCP connection opened, skipping message")
             websocket.write_message(
-                f"No TCP connection opened, cannot send "
-                f"message '{data.decode('utf-8')}'.\n"
+                "No TCP connection opened, cannot send "
+                "message '{}'.\n".format(data.decode('utf-8'))
             )
 
     def handle_websocket_close(self, websocket):
@@ -133,7 +133,7 @@ class WebApplication(tornado.web.Application):
 
         # websockets list is now empty for given node, closing tcp connection.
         if tcp_client.ready and not self.websockets[node]:
-            LOGGER.debug(f"Closing TCP connection to node '{node}'")
+            LOGGER.debug("Closing TCP connection to node '{}'".format(node))
             tcp_client.stop()
             self.tcp_clients.pop(node)
             del tcp_client
@@ -145,7 +145,7 @@ class WebApplication(tornado.web.Application):
                 try:
                     data = data.decode("utf-8")
                 except UnicodeDecodeError:
-                    LOGGER.debug(f"Cannot decode message: {data}")
+                    LOGGER.debug("Cannot decode message: {}".format(data))
                     continue
             websocket.write_message(data, binary=not websocket.text)
 

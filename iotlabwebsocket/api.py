@@ -44,7 +44,7 @@ class ApiClient:
     @property
     def url(self):
         """Returns the base URL for experiments in the API."""
-        return f"{self.protocol}://{self.host}:{self.port}/api/experiments"
+        return "{}://{}:{}/api/experiments".format(self.protocol, self.host, self.port)
 
     @staticmethod
     def _configure_client(client, proxy=None):
@@ -72,7 +72,7 @@ class ApiClient:
                 proxy_host = proxy_parts[0]
                 proxy_port = int(proxy_parts[1]) if len(proxy_parts) > 1 else 3128
             
-            LOGGER.debug(f"Using HTTP proxy for request: {proxy_host}:{proxy_port}")
+            LOGGER.debug("Using HTTP proxy for request: {}:{}".format(proxy_host, proxy_port))
             request.proxy_host = proxy_host
             request.proxy_port = proxy_port
         
@@ -98,7 +98,7 @@ class ApiClient:
                 proxy_host = proxy_parts[0]
                 proxy_port = int(proxy_parts[1]) if len(proxy_parts) > 1 else 3128
             
-            LOGGER.debug(f"Using HTTP proxy for request: {proxy_host}:{proxy_port}")
+            LOGGER.debug("Using HTTP proxy for request: {}:{}".format(proxy_host, proxy_port))
             request.proxy_host = proxy_host
             request.proxy_port = proxy_port
                 
@@ -107,7 +107,7 @@ class ApiClient:
         raise gen.Return(response.buffer.read())
 
     def _request(self, exp_id, resource):
-        _url = f"{self.url}/{exp_id}/{resource}"
+        _url = "{}/{}/{}".format(self.url, exp_id, resource)
         kwargs = {}
         if self.username and self.password:
             kwargs.update(

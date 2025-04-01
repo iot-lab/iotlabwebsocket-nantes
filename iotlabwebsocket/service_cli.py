@@ -17,7 +17,7 @@ def main(args=None):
     # Get proxy from args or environment
     proxy = args.http_proxy or os.environ.get('http_proxy') or os.environ.get('HTTP_PROXY')
     if proxy:
-        LOGGER.info(f"Using HTTP proxy: {proxy}")
+        LOGGER.info("Using HTTP proxy: {}".format(proxy))
     
     api = ApiClient(
         args.api_protocol,
@@ -30,7 +30,7 @@ def main(args=None):
     app = WebApplication(api, use_local_api=args.use_local_api, token=args.token)
     try:
         app.listen(args.port)
-        LOGGER.info(f"Application started, listening on port {args.port}")
+        LOGGER.info("Application started, listening on port {}".format(args.port))
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         LOGGER.debug("Shuting down service")

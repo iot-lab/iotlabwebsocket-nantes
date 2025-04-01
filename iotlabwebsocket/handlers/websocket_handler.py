@@ -43,12 +43,12 @@ class WebsocketClientHandler(websocket.WebSocketHandler):
         )
 
         if req_token != api_token:
-            LOGGER.warning(f"Reject websocket connection: invalib token '{req_token}'")
+            LOGGER.warning("Reject websocket connection: invalib token '{}'".format(req_token))
             self.set_status(401)  # Authentication failed
-            self.finish(f"Invalid token '{req_token}'")
+            self.finish("Invalid token '{}'".format(req_token))
             return False
 
-        LOGGER.debug(f"Provided token '{req_token}' verified")
+        LOGGER.debug("Provided token '{}' verified".format(req_token))
         return True
 
     @gen.coroutine
@@ -61,8 +61,8 @@ class WebsocketClientHandler(websocket.WebSocketHandler):
                 return True
 
         LOGGER.warning(
-            f"Invalid node '{self.node}' for experiment id "
-            f"'{self.experiment_id}' in site '{self.site}'"
+            "Invalid node '{}' for experiment id "
+            "'{}' in site '{}'".format(self.node, self.experiment_id, self.site)
         )
         # No node matches the requested ressource for the experiment and site.
         self.set_status(401)  # Authentication failed
@@ -110,8 +110,8 @@ class WebsocketClientHandler(websocket.WebSocketHandler):
         yield super(WebsocketClientHandler, self).get(*args, **kwargs)
 
         LOGGER.info(
-            f"Websocket connection for experiment '{self.experiment_id}' "
-            f"on node '{self.node}'"
+            "Websocket connection for experiment '{}' "
+            "on node '{}'".format(self.experiment_id, self.node)
         )
 
     def check_origin(self, origin):
@@ -125,7 +125,7 @@ class WebsocketClientHandler(websocket.WebSocketHandler):
         After 2s, if the connection is not authentified, it's closed.
         """
         self.set_nodelay(True)
-        LOGGER.debug(f"Websocket connection opened for node '{self.node}'")
+        LOGGER.debug("Websocket connection opened for node '{}'".format(self.node))
         self.application.handle_websocket_open(self)
 
     @gen.coroutine
@@ -143,7 +143,7 @@ class WebsocketClientHandler(websocket.WebSocketHandler):
     def on_close(self):
         """Manage the disconnection of the websocket."""
         LOGGER.info(
-            f"Websocket connection closed for node '{self.node}', "
-            f"code: {self.close_code}, reason: '{self.close_reason}'"
+            "Websocket connection closed for node '{}', "
+            "code: {}, reason: '{}'".format(self.node, self.close_code, self.close_reason)
         )
         self.application.handle_websocket_close(self)
